@@ -57,18 +57,39 @@ async function run() {
         })
 
         // update a book data: patch or update methods
-        app.patch('/update-book/:id', async (req, res) => {
+        // app.patch('/update-book/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const data = req.body;
+        //     const filter = { _id: new ObjectId(id) };
+        //     const updateBook = {
+        //         $set: {
+        //             ...data
+        //         }
+        //     }
+        //     const options = { upsert: true }
+        //     const result = await bookCollections.updateOne(filter, updateBook, options);
+        //     res.send(result);
+        // })
+
+        app.put('/update-book/:id', async (req, res) =>{
             const id = req.params.id;
-            const data = req.body;
-            const filter = { _id: new ObjectId(id) };
-            const updateBook = {
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert: true};
+            const updateBook = req.body;
+            const update = {
                 $set: {
-                    ...data
+                    bookTitle : updateBook.bookTitle,
+                    authorName : updateBook.authorName,
+                    imageUrl : updateBook.imageUrl,
+                    category : updateBook.category,
+                    bookPdfUrl : updateBook.bookPdfUrl,
+                    price : updateBook.price,
+                    bookDescription : updateBook.bookDescription
                 }
-            }
-            const options = { upsert: true }
-            const result = await bookCollections.updateOne(filter, updateBook, options);
+            };
+            const result = await bookCollections.updateOne(filter, update, options);
             res.send(result);
+
         })
 
         // delete a book from the database
